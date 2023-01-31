@@ -24,20 +24,20 @@ Max est un chat qui mesure 66 à 76cm et qui pèse 2.5 à 2.5 kg, de couleur vio
 
 - Max est l'ennemi juré de Ted, une petite souris grise Dans chaque niveau,  Max cherche à se débarrasser de Ted d'une façon souvent la plus violente possible, avec notamment armes à feu, dynamites, et poison. Malgré son énergie et sa détermination, Max ne parvient pas à piéger Ted, qui retourne les pièges et la situation contre son adversaire.
 
-  ## Les niveaux du jeu
-  * Niveau 1 : Ted et Max à la Campagne
+## Les niveaux du jeu
+* Niveau 1 : Ted et Max à la Campagne
 Le niveau commence avec une introduction de l’histoire. Et un micro didacticiel. Ce dernier explique les touches nécessaires pour le fonctionnement du jeu (sauter -> espace, se baisser -> flèche du bas).
 Pour lancer le jeu, il faut tout d’abord appuyer sur espace.
 Dans ce niveau les obstacles sont simples, juste des cactus.
 Ted s'enfuit de sa maison, qui est dans la campagne, pour aller en ville, la fin du niveau ce terminer avec Ted qui arrive en ville.
 
-  * Niveau 2 : Ted et Max en Ville
+* Niveau 2 : Ted et Max en Ville
 Ted à réussi à s'enfuir de la campagne. Il est maintenant en ville.
 Dans ce niveau les obstacles sont plus compliqués. On à maintenant des voitures en mouvement à éviter. Ainsi qu’un grand nombre de pigeons dans les airs. Il y a encore des obstacles statiques
 Nous avons également des bonus. En ville, Ted arrive à trouver des fromages, qui lui permettent alors d'avancer plus vite momentanément.
 Ici le niveau ce termine lorsque Ted arriver dans la foret. Le temps est passer, il fait maintenant nuit.
 
-  * Niveau 3 : Ted et Max dans la forêt des Ténèbre
+* Niveau 3 : Ted et Max dans la forêt des Ténèbre
 Le niveau final est alors le plus compliqué, Ted et Max sont dans la foret des ténèbre.
 Nous avons maintenant des branches qui tombent du ciel. En plus de cela il y a des obstacles statiques et dans les airs.
 Ici il y a également des fromages qui permettent à Ted d’aller plus vite. Cependant, il y aussi des fromages pourris. Ces derniers sont donc un malus qui ralentit Ted, et aide alors Max.
