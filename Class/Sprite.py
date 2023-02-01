@@ -11,3 +11,7 @@ class Sprite(sprite.Sprite):
 
     def set_image_size(self, width, height):
         self.image = transform.scale(self.image, (width, height))
+
+    def resize_image(self, width, height):
+        self.image = transform.scale(self.image, (width, height))
+        
