@@ -1,17 +1,19 @@
-import pygame
-pygame.init()
+from pygame import display, time
 
-class Window:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.window = pygame.display.set_mode((self.width, self.height))
-        self.window.fill((0, 0, 0))
-        pygame.display.set_caption("Ted & Max")
 
-    def update(self):
-        pygame.display.update()
+class Window(object):
+    def __init__(self, width, height, flags):
+        self.__clock = time.Clock
+        self.screen = display.set_mode((width, height), flags)
+        display.set_caption("Ted & Max")
 
-    def get_window(self):
-        return self.window
-    
+    @staticmethod
+    def update():
+        display.update()
+
+    def get_screen(self):
+        return self.screen
+
+    def get_screen_size(self):
+        width, height = self.screen.get_size()
+        return [width, height]
