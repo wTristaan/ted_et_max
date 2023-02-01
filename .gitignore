@@ -1,2 +1,5 @@
 .idea
 __pychache__
+venv
+Class/.idea
+Class/.__pychache__
