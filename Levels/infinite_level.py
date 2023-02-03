@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from Class.Mouse import Mouse
 from Class.Sprite import Sprite
@@ -18,6 +19,9 @@ def ended_game(window, score, enemie):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return True
 
         window.update()
 
@@ -38,6 +42,13 @@ def lock_player(window):
 
 
 def infinite_level(window):
+    cheese_count = 0
+    cheese = None
+    cheese_timer = 0
+    cheese_cooldown = 7000
+    cheese_spawn = False
+    speed = 1.7
+    colors = ["bleu", "red", "green"]
     game_over = False
     mouse_hurt = False
     locked = False
@@ -47,7 +58,7 @@ def infinite_level(window):
     new_enemie = None
     obstacle_timer = 0
     obstacle_spawn = False
-    obstacle_cooldown = 3000
+    obstacle_cooldown = 2500
     mouse = Mouse(x=10, y=460, w=50, h=50)
 
     running = True
@@ -85,6 +96,7 @@ def infinite_level(window):
     floor_x2 = w
 
     while running:
+        speed = speed * 1.00005
         if not locked:
             locked = lock_player(window)
             mouse.space_down = True
@@ -103,16 +115,16 @@ def infinite_level(window):
         screen.blit(floor_scaled, (floor_x, 0))
         screen.blit(floor_scaled, (floor_x2, 0))
 
-        bg_orange_x -= 1 / 2
-        bg_orange_x2 -= 1 / 2
-        bg_cloud_x -= 2 / 2
-        bg_cloud_x2 -= 2 / 2
-        bg_mountain_x -= 3 / 2
-        bg_mountain_x2 -= 3 / 2
-        bg_tree_x -= 4 / 2
-        bg_tree_x2 -= 4 / 2
-        floor_x -= 5 / 2
-        floor_x2 -= 5 / 2
+        bg_orange_x -= 1 / speed
+        bg_orange_x2 -= 1 / speed
+        bg_cloud_x -= 2 / speed
+        bg_cloud_x2 -= 2 / speed
+        bg_mountain_x -= 3 / speed
+        bg_mountain_x2 -= 3 / speed
+        bg_tree_x -= 4 / speed
+        bg_tree_x2 -= 4 / speed
+        floor_x -= 5 / speed
+        floor_x2 -= 5 / speed
 
         if bg_orange_x < -w:
             bg_orange_x = w
@@ -147,19 +159,37 @@ def infinite_level(window):
         if pygame.time.get_ticks() - obstacle_timer >= obstacle_cooldown:
             obstacle_spawn = True
 
+        if pygame.time.get_ticks() - cheese_timer >= cheese_cooldown:
+            cheese_spawn = True
+
+        if cheese_spawn:
+            y = random.randint(420, 465)
+            cheese = Sprite(color=None, w=50, h=50, x=w + 100, y=y, img="assets/Mouse/camembert.png")
+            cheese_timer = pygame.time.get_ticks()
+            cheese_spawn = False
+
         if obstacle_spawn:
-            new_enemie = Sprite(color="bleu", w=50, h=50, x=w + 10, y=465)
+            color = random.choice(colors)
+            new_enemie = Sprite(color=color, w=50, h=50, x=w + 10, y=465)
             obstacle_timer = pygame.time.get_ticks()
             obstacle_spawn = False
 
+        if cheese:
+            cheese.solo_update(screen, speed)
+            if cheese.rect.collidepoint(mouse.rect.x, mouse.rect.y):
+                window.jumping_sound_fx.play()
+                cheese = None
+                cheese_count += 1
+                mouse.health += 1
+
         if new_enemie:
-            new_enemie.update(screen, 5 / 2)
+            new_enemie.jump(screen)
+            new_enemie.update(screen, 5 / speed)
 
             if new_enemie.rect.collidepoint(mouse.rect.x, mouse.rect.y):
                 window.hurt_fx.play()
                 if mouse.health == 0:
                     game_over = True
-                    print("boom")
                 else:
                     mouse.space_down = True
                     new_enemie = None
@@ -174,8 +204,10 @@ def infinite_level(window):
 
         player_score += 0.1
         player_score_text = font.render(str(int(player_score)), True, "black")
+        player_cheese_text = font.render("Fromage récupéré(s) " + str(int(cheese_count)), True, "black")
         # Affiche le score du joueur
         screen.blit(player_score_text, (800, 10))
+        screen.blit(player_cheese_text, (200, 10))
 
         x = 30
         for i in range(mouse.health):
@@ -188,5 +220,5 @@ def infinite_level(window):
             mouse.display(screen)
         else:
             mouse.flip(screen)
-            ended_game(window, player_score, new_enemie)
+            return ended_game(window, player_score, new_enemie)
         window.update()
