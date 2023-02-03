@@ -1,8 +1,9 @@
 # Importation des modules.
 import pygame
 
-from tuto import tutorial
-from infinite_level import infinite_level
+from tuto import show_tuto
+from settings import show_setting
+from level_menu import show_level_menu
 from Class.Window import Window
 
 
@@ -11,7 +12,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Création de la fenêtre
-window = Window(900, 700, pygame.RESIZABLE)
+window = Window(900, 600, pygame.RESIZABLE)
 
 # Initialisation des variables.
 screen = window.get_screen()
@@ -31,10 +32,12 @@ aventure = False
 option = False
 close_window = False
 bg_images, bg_width = window.load_bg()
-scroll = 0
+running = True
 
 # boucle principale.
-while True:
+while running:
+
+    # Affichage du background et défilement.
     window.draw_bg(bg_images, bg_width, scroll)
 
     # auto scroll
@@ -50,28 +53,40 @@ while True:
                                             window.get_screen_size()[1] / 2 - play_button2.get_height() / 2 + 0))
     screen.blit(play_button3, (window.get_screen_size()[0] / 2 - play_button3.get_width() / 2,
                                             window.get_screen_size()[1] / 2 - play_button3.get_height() / 2 + 200))
+
+    # Gestion des évènements dans le menu principal.
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            exit()
         if event.type == pygame.VIDEORESIZE:
             bg_images, bg_width = window.load_bg()
-        # faire lancer le jeu
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:  # aventure
                 aventure = True
-            if event.key == pygame.K_LEFT:  # option
+            if event.key == pygame.K_RIGHT:  # option
                 option = True
             if event.key == pygame.K_DOWN:  # fermeture
                 pygame.quit()
+                exit()
 
+    # Si le joueur décide de lancer le menu aventure.
     if aventure:
+        # Vérifie le cache pour savoir si le joueur à déjà fait le tuto.
         value = open("cache.txt").read()
-        print(value)
         if value == "0":
-            tutorial(window=window, bg_images=bg_images, bg_width=bg_width)
-            with open("cache.txt", 'w') as f:
-                f.write(str(1))
-            infinite_level(window=window, bg_images=bg_images, bg_width=bg_width)
+            window.change_menu_fx.play()
+            aventure = show_tuto(window)
+            if aventure:
+                with open("cache.txt", 'w') as f:
+                    f.write(str(1))
         else:
-            infinite_level(window=window, bg_images=bg_images, bg_width=bg_width)
+            window.change_menu_fx.play()
+            aventure = False
+            show_level_menu(window)
+
+    if option:
+        window.change_menu_fx.play()
+        option = show_setting(window)
+        window.change_menu_fx.play()
     window.update()

@@ -1,4 +1,4 @@
-from pygame import display, time, image, transform
+from pygame import display, time, image, transform, mixer
 
 
 class Window(object):
@@ -8,7 +8,29 @@ class Window(object):
         self.tuto_text = False
         self.tuto_right = False
         self.tuto_jump = False
+        self.main_music = "assets/Musics/main-music.mp3"
+        self.change_menu = "assets/Musics/effects/change_menu.wav"
+        self.typing_sound = "assets/Musics/effects/type_sound.mp3"
+        self.lock_sound = "assets/Musics/effects/locked.mp3"
+        self.jumping_sound = "assets/Musics/effects/jump.wav"
+
+        self.change_menu_fx = mixer.Sound(self.change_menu)
+        self.change_menu_fx.set_volume(0.2)
+
+        self.typing_sound_fx = mixer.Sound(self.typing_sound)
+        self.typing_sound_fx.set_volume(0.1)
+
+        self.lock_sound_fx = mixer.Sound(self.typing_sound)
+        self.lock_sound_fx.set_volume(1)
+
+        self.jumping_sound_fx = mixer.Sound(self.jumping_sound)
+        self.jumping_sound_fx.set_volume(0.1)
+
         display.set_caption("Ted & Max")
+        mixer.init()
+        mixer.music.load(self.main_music)
+        mixer.music.set_volume(0.02)
+        mixer.music.play(-1)
 
     @staticmethod
     def update():
