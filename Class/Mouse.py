@@ -1,60 +1,68 @@
-import pygame
+from pygame import image, Surface, transform, sprite, Rect
 
 
-class Mouse(pygame.sprite.Sprite):
+class Mouse(sprite.Sprite):
 
     def __init__(self, x, y, w, h):
         super().__init__()
+        self.images_left = list()
+        for i in range(1, 3):
+            img = image.load(f"assets/Mouse/mouse{i}.png")
+            img_scaled = transform.scale(img, (w, h))
+            self.images_left.append(img_scaled)
+        self.images_right = list()
+        for i in range(1, 3):
+            img = image.load(f"assets/Mouse/mouse{i}.png")
+            img_scaled = transform.scale(img, (w, h))
+            img_flip = transform.flip(img_scaled, True, False)
+            self.images_right.append(img_flip)
         self.x = int(x)
         self.y = int(y)
-        self.imgs = list()
-        for i in range(1, 3):
-            img = pygame.image.load(f"assets/Mouse/mouse{i}.png")
-            img_flip = pygame.transform.flip(img, True, False)
-            self.imgs.append(pygame.transform.scale(img_flip, (w, h)))
-        self.rect = self.imgs[0].get_rect()
-        self.color = (250, 120, 60)
-        self.velX = 0
-        self.velY = 0
-        self.left_pressed = False
-        self.right_pressed = False
-        self.up_pressed = False
-        self.down_pressed = False
+        self.right_down = False
+        self.left_down = False
+        self.index = 0
         self.speed = 1
+        self.last_pos = "right"
+        self.space_down = False
         self.velocity = 20
-        self.jump_h = 20
         self.gravity = 0.6
+        self.jump_h = 20
+        self.floor = y
+        self.jump_count = 0
+        self.rect = self.images_right[0].get_rect(topleft=(x, y))
 
-    def update(self, win):
-        self.velX = 0
-        self.velY = 0
-        if self.left_pressed and not self.right_pressed:
-            self.velX = -self.speed
-            for y in self.imgs:
-                self.imgs = []
-                img = pygame.transform.flip(y, True, False)
-                win.screen.blit(img, (self.x, self.y))
-                self.imgs.append(img)
-        if self.right_pressed and not self.left_pressed:
-            self.velX = self.speed
-            for y in self.imgs:
-                self.imgs = []
-                img = pygame.transform.flip(y, True, False)
-                win.screen.blit(img, (self.x, self.y))
-                self.imgs.append(img)
-
-        if self.up_pressed:
-            x = self.x
+    def display(self, screen):
+        if self.space_down:
             self.y -= self.velocity
             self.velocity -= self.gravity
             if self.velocity < -self.jump_h:
-                self.up_pressed = False
                 self.velocity = self.jump_h
-                self.y = 550
+                self.y = 460
+                self.space_down = False
 
-        self.x += self.velX
-        self.y += self.velY
+            if self.last_pos == "right":
+                screen.blit(self.images_right[1], (self.x, self.y))
+                self.rect = self.images_right[1].get_rect(topleft=(self.x, self.y))
+            if self.last_pos == "left":
+                screen.blit(self.images_left[1], (self.x, self.y))
+                self.rect = self.images_left[1].get_rect(topleft=(self.x, self.y))
 
-        self.rect = pygame.Rect(int(self.x), int(self.y), 32, 32)
-        win.screen.blit(self.imgs[0], (self.x, self.y))
-        win.update()
+        if self.right_down:
+            self.x += self.speed
+            screen.blit(self.images_right[self.index], (self.x, self.y))
+            self.index += 1
+            if self.index > 1:
+                self.index = 0
+            self.last_pos = "right"
+        elif self.left_down:
+            self.x -= self.speed
+            screen.blit(self.images_left[self.index], (self.x, self.y))
+            self.index += 1
+            if self.index > 1:
+                self.index = 0
+            self.last_pos = "left"
+        else:
+            if self.last_pos == "right":
+                screen.blit(self.images_right[0], (self.x, self.y))
+            if self.last_pos == "left":
+                screen.blit(self.images_left[0], (self.x, self.y))
