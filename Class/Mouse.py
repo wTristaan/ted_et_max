@@ -1,3 +1,4 @@
+import pygame.transform
 from pygame import image, Surface, transform, sprite, Rect
 
 
@@ -29,7 +30,9 @@ class Mouse(sprite.Sprite):
         self.jump_h = 20
         self.floor = y
         self.jump_count = 0
-        self.rect = self.images_right[0].get_rect(topleft=(x, y))
+        self.rect = self.images_right[0].get_rect(center=(x, y))
+        self.health = 3
+        self.death = pygame.transform.flip(self.images_left[0], False, True)
 
     def display(self, screen):
         if self.space_down:
@@ -66,3 +69,6 @@ class Mouse(sprite.Sprite):
                 screen.blit(self.images_right[0], (self.x, self.y))
             if self.last_pos == "left":
                 screen.blit(self.images_left[0], (self.x, self.y))
+
+    def flip(self, screen):
+        screen.blit(self.death, (self.x, self.y))

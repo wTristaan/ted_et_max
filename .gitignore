@@ -1,9 +1,10 @@
 .idea
-__pychache__
+__pychache__/
 venv
 .DS_Store
 assets/.DS_Store
 assets/Menu/.DS_Store
 assets/Menu/PARALLAX/.DS_Store
 Class/.idea
-Class/.__pychache__
+Class/__pychache__/
+Levels/__pycache__/

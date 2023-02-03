@@ -5,6 +5,7 @@ from Class.Mouse import Mouse
 
 pygame.init()
 
+
 def typing(text, window):
     global spacing, line, text_end, index, space_text
     while not text_end:

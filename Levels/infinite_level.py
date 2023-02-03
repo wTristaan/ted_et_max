@@ -3,14 +3,52 @@ import pygame
 from Class.Mouse import Mouse
 from Class.Sprite import Sprite
 
+font = pygame.font.SysFont(None, 35)
+
+
+def ended_game(window, score, enemie):
+    window.boom_fx.play()
+    pygame.mixer.music.stop()
+    running = True
+    player_message = font.render("Vous êtes mort votre score est de " + str(round(score, 1)), True, "white")
+    while running:
+        enemie.explode(window.screen)
+        window.screen.blit(player_message, (250, 100))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+
+        window.update()
+
+
+def lock_player(window):
+    running = True
+    player_message = font.render("Espace pour commencer", True, "white")
+    while running:
+        window.screen.blit(player_message, (50, 50))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return True
+        window.update()
+
 
 def infinite_level(window):
+    game_over = False
+    mouse_hurt = False
+    locked = False
+    full_life = pygame.image.load("assets/Mouse/heart.png").convert_alpha()
+    full_life_scaled = pygame.transform.scale(full_life, (25, 25))
+    player_score = 0
+    new_enemie = None
     obstacle_timer = 0
     obstacle_spawn = False
-    obstacle_cooldown = 1000
+    obstacle_cooldown = 3000
     mouse = Mouse(x=10, y=460, w=50, h=50)
-    mouseGroup = pygame.sprite.GroupSingle()
-    mouseGroup.add(mouse)
 
     running = True
     screen = window.get_screen()
@@ -47,7 +85,9 @@ def infinite_level(window):
     floor_x2 = w
 
     while running:
-
+        if not locked:
+            locked = lock_player(window)
+            mouse.space_down = True
         screen.blit(bg_orange_scaled, (bg_orange_x, 0))
         screen.blit(bg_orange_scaled, (bg_orange_x2, 0))
 
@@ -105,15 +145,48 @@ def infinite_level(window):
                     mouse.space_down = True
 
         if pygame.time.get_ticks() - obstacle_timer >= obstacle_cooldown:
-            obstacleSpawn = True
+            obstacle_spawn = True
 
-        if obstacleSpawn:
-            new_enemis = Sprite(1280, 580)
-            obstacleGroup.add(newObstacle)
-            obstacleTimer = pygame.time.get_ticks()
-            obstacleSpawn = False
+        if obstacle_spawn:
+            new_enemie = Sprite(color="bleu", w=50, h=50, x=w + 10, y=465)
+            obstacle_timer = pygame.time.get_ticks()
+            obstacle_spawn = False
 
-        mouse.right_down = True
-        mouse.x = 10
-        mouse.display(screen)
+        if new_enemie:
+            new_enemie.update(screen, 5 / 2)
+
+            if new_enemie.rect.collidepoint(mouse.rect.x, mouse.rect.y):
+                window.hurt_fx.play()
+                if mouse.health == 0:
+                    game_over = True
+                    print("boom")
+                else:
+                    mouse.space_down = True
+                    new_enemie = None
+                    mouse_hurt = True
+
+        if mouse_hurt:
+            mouse.health -= 1
+            mouse_hurt = False
+
+        if round(player_score, 1) % 100 == 0 and int(player_score) > 0:
+            window.scoring_sound_fx.play()
+
+        player_score += 0.1
+        player_score_text = font.render(str(int(player_score)), True, "black")
+        # Affiche le score du joueur
+        screen.blit(player_score_text, (800, 10))
+
+        x = 30
+        for i in range(mouse.health):
+            screen.blit(full_life_scaled, (x, 10))
+            x += 50
+
+        if not game_over:
+            mouse.right_down = True
+            mouse.x = 10
+            mouse.display(screen)
+        else:
+            mouse.flip(screen)
+            ended_game(window, player_score, new_enemie)
         window.update()

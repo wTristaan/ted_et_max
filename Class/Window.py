@@ -1,10 +1,13 @@
-from pygame import display, time, image, transform, mixer
+from pygame import display, time, image, transform, mixer, FULLSCREEN
 
 
 class Window(object):
     def __init__(self, width, height, flags):
         self.__clock = time.Clock
-        self.screen = display.set_mode((width, height), flags)
+        if flags == FULLSCREEN:
+            self.screen = display.set_mode((0, 0), flags)
+        else:
+            self.screen = display.set_mode((width, height), flags)
         self.tuto_text = False
         self.tuto_right = False
         self.tuto_jump = False
@@ -13,6 +16,9 @@ class Window(object):
         self.typing_sound = "assets/Musics/effects/type_sound.mp3"
         self.lock_sound = "assets/Musics/effects/locked.mp3"
         self.jumping_sound = "assets/Musics/effects/jump.wav"
+        self.scoring_sound = "assets/Musics/effects/scoring.mp3"
+        self.hurt = "assets/Musics/effects/hurt.mp3"
+        self.boom = "assets/Musics/effects/boom.wav"
 
         self.change_menu_fx = mixer.Sound(self.change_menu)
         self.change_menu_fx.set_volume(0.2)
@@ -25,6 +31,15 @@ class Window(object):
 
         self.jumping_sound_fx = mixer.Sound(self.jumping_sound)
         self.jumping_sound_fx.set_volume(0.1)
+
+        self.scoring_sound_fx = mixer.Sound(self.scoring_sound)
+        self.scoring_sound_fx.set_volume(0.5)
+
+        self.hurt_fx = mixer.Sound(self.hurt)
+        self.hurt_fx.set_volume(0.5)
+
+        self.boom_fx = mixer.Sound(self.boom)
+        self.boom_fx.set_volume(0.5)
 
         display.set_caption("Ted & Max")
         mixer.init()
