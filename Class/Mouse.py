@@ -31,7 +31,7 @@ class Mouse(sprite.Sprite):
         self.floor = y
         self.jump_count = 0
         self.rect = self.images_right[0].get_rect(center=(x, y))
-        self.health = 3
+        self.health = 1
         self.death = pygame.transform.flip(self.images_left[0], False, True)
 
     def display(self, screen):

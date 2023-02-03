@@ -1,6 +1,6 @@
 # Ted et Max
 
-C'est l'aventure  d’un chat maladroit et d’une petite souris futée. Le chat, qui tente à tout prix d’attraper la souris, n'hésite pas à se défendre en lui faisant mal. Malheureusement pour Max, il ne parviendra jamais à attraper son pire ennemi.
+C'est l'aventure d’un chat maladroit et d’une petite souris futée. Le chat, qui tente à tout prix d’attraper la souris, n'hésite pas à se défendre en lui faisant mal. Malheureusement pour Max, il ne parviendra jamais à attraper son pire ennemi.
 
 Le fameux Max, un chat affamé, gourmand et paresseux, souhaite se reposer quand une maligne petite souris grise vient perturber son calme. S’en suit alors, une course poursuite endiablée entre nos deux personnages. 
 Est-ce que le chat et la souris peuvent vivre en paix l'un avec l'autre ? Probablement pas…
