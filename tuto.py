@@ -1,12 +1,21 @@
+# Importations des modules.
 import pygame
 import time
 
 from Class.Mouse import Mouse
 
+# Initialisation de pygame.
 pygame.init()
 
 
+# Définitions de méthodes.
 def typing(text, window):
+    """Fonction qui bloque le joueur et affiche un texte en mode "machine à écrire".
+
+    :param text: Str
+    :param window: Window
+    :return: Bool
+    """
     global spacing, line, text_end, index, space_text
     while not text_end:
         if index < len(text):
@@ -19,7 +28,7 @@ def typing(text, window):
             window.screen.blit(text_img, (spacing, line))
             index += 1
             spacing += text_width
-            time.sleep(0.05)
+            time.sleep(0.01)
             window.typing_sound_fx.play()
             window.update()
         else:
@@ -38,8 +47,13 @@ def typing(text, window):
 
 
 def show_mouse(window):
+    """Fonction qui fait apparaitre le joueur et le bloque jusqu'à ce qu'il avance.
+
+    :param window: Window
+    :return: List
+    """
     global user_left_used, right_text
-    mouse = Mouse(x=10, y=460, w=50, h=50)
+    mouse = Mouse(x=10, y=545, w=75, h=75)
     screen = window.get_screen()
     while not user_left_used:
         mouse.display(screen)
@@ -57,6 +71,12 @@ def show_mouse(window):
 
 
 def show_space(window, text_to_show):
+    """Fonction qui affiche un text et bloque le joueur jusqu'à ce qu'il saute.
+
+    :param window: Window
+    :param text_to_show: Str
+    :return: Bool
+    """
     global user_space
     while not user_space:
         window.screen.blit(text_to_show, (50, 50))
@@ -74,9 +94,9 @@ def show_space(window, text_to_show):
 running = True
 scroll = 0
 font = pygame.font.SysFont(None, 24)
-story_text = "BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA" \
-       "BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA" \
-       " ET ENFIN BLABLABLABLABLABLABLABLABLABLABLABLA..."
+story_text = "C’est l’histoire d’un petit rat un peu maladroit. Le rat est très radin et ne veux pas utiliser sa " \
+             "nourriture. Alors, il trouve comme moyen de voler toute la nourriture qu’il voit. “On peut en effet " \
+             "dire que c’est un sacré rat”."
 story_text = [*story_text]
 spacing = 50
 line = 50
@@ -114,6 +134,7 @@ def show_tuto(window):
 
             if scroll > 100 and not mouse_exist:
                 mouse, mouse_exist = show_mouse(window)
+                mouse.right_down = True
 
             if mouse:
                 if mouse.jump_count == 4:

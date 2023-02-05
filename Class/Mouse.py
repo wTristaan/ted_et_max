@@ -1,10 +1,17 @@
+# Importations des modules.
 import pygame.transform
-from pygame import image, Surface, transform, sprite, Rect
+from pygame import image, transform, sprite
 
 
+# Définition de la class Mouse.
 class Mouse(sprite.Sprite):
+    """Class du personnage principal.
 
+    """
+
+    # Définitions du constructeur.
     def __init__(self, x, y, w, h):
+        # Récupère la class Sprite de pygame en héritage.
         super().__init__()
         self.images_left = list()
         for i in range(1, 3):
@@ -35,12 +42,18 @@ class Mouse(sprite.Sprite):
         self.death = pygame.transform.flip(self.images_left[0], False, True)
 
     def display(self, screen):
+        """Fonction permettant de mettre à joueur la position ou l'affichage du personnage
+        selon sa position ou des événements provoqués par le joueur.
+
+        :param screen: display
+        :return: None
+        """
         if self.space_down:
             self.y -= self.velocity
             self.velocity -= self.gravity
             if self.velocity < -self.jump_h:
                 self.velocity = self.jump_h
-                self.y = 460
+                self.y = 545
                 self.space_down = False
 
             if self.last_pos == "right":
@@ -71,4 +84,9 @@ class Mouse(sprite.Sprite):
                 screen.blit(self.images_left[0], (self.x, self.y))
 
     def flip(self, screen):
+        """Fonction permettant de retourner le sprite du personnage.
+
+        :param screen: display
+        :return: None
+        """
         screen.blit(self.death, (self.x, self.y))

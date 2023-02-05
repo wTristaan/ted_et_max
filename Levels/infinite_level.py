@@ -1,17 +1,27 @@
+# Importations des modules.
 import pygame
 import random
 
 from Class.Mouse import Mouse
 from Class.Sprite import Sprite
 
+# initialisation d'un Font.
 font = pygame.font.SysFont(None, 35)
 
 
+# Définitions des fonctions.
 def ended_game(window, score, enemie):
+    """Fonction qui affiche l'écran de game over
+
+    :param window: Window
+    :param score: Float
+    :param enemie: Sprite
+    :return: Bool
+    """
     window.boom_fx.play()
     pygame.mixer.music.stop()
     running = True
-    player_message = font.render("Vous êtes mort votre score est de " + str(round(score, 1)), True, "white")
+    player_message = font.render("Vous êtes mort votre score est de " + str(int(score)), True, "white")
     while running:
         enemie.explode(window.screen)
         window.screen.blit(player_message, (250, 100))
@@ -27,6 +37,11 @@ def ended_game(window, score, enemie):
 
 
 def lock_player(window):
+    """Fonction qui bloque le joueur pour commencer une partie.
+
+    :param window: Window
+    :return: Bool
+    """
     running = True
     player_message = font.render("Espace pour commencer", True, "white")
     while running:
@@ -42,12 +57,19 @@ def lock_player(window):
 
 
 def infinite_level(window):
+    """Fonction qui génère le niveau infini.
+
+    :param window: Window
+    :return: None
+    """
+
+    # Initialisation de variables.
     cheese_count = 0
     cheese = None
     cheese_timer = 0
     cheese_cooldown = 7000
     cheese_spawn = False
-    speed = 1.7
+    speed = 1.9
     colors = ["bleu", "red", "green"]
     game_over = False
     mouse_hurt = False
@@ -58,8 +80,8 @@ def infinite_level(window):
     new_enemie = None
     obstacle_timer = 0
     obstacle_spawn = False
-    obstacle_cooldown = 2500
-    mouse = Mouse(x=10, y=460, w=50, h=50)
+    obstacle_cooldown = 5000
+    mouse = Mouse(x=500, y=300, w=75, h=75)
 
     running = True
     screen = window.get_screen()
@@ -95,11 +117,18 @@ def infinite_level(window):
     floor_scaled = pygame.transform.scale(floor, (w, h))
     floor_x2 = w
 
+    # Boucle du niveau infini
     while running:
+
+        # Augmentation de la vitesse du jeu.
         speed = speed * 1.00005
+        if speed > 2:
+            speed = 1.9
         if not locked:
             locked = lock_player(window)
             mouse.space_down = True
+
+        # Affiche du fond avec un décallage pour créer un parallax.
         screen.blit(bg_orange_scaled, (bg_orange_x, 0))
         screen.blit(bg_orange_scaled, (bg_orange_x2, 0))
 
@@ -147,6 +176,7 @@ def infinite_level(window):
         if floor_x2 < -w:
             floor_x2 = w
 
+        # Gestion des événements.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -156,27 +186,29 @@ def infinite_level(window):
                     window.jumping_sound_fx.play()
                     mouse.space_down = True
 
+        # Faire spawn un ennemi
         if pygame.time.get_ticks() - obstacle_timer >= obstacle_cooldown:
             obstacle_spawn = True
 
+        # Faire spawn in fromage
         if pygame.time.get_ticks() - cheese_timer >= cheese_cooldown:
             cheese_spawn = True
 
         if cheese_spawn:
-            y = random.randint(420, 465)
+            y = random.randint(300, 545)
             cheese = Sprite(color=None, w=50, h=50, x=w + 100, y=y, img="assets/Mouse/camembert.png")
             cheese_timer = pygame.time.get_ticks()
             cheese_spawn = False
 
         if obstacle_spawn:
             color = random.choice(colors)
-            new_enemie = Sprite(color=color, w=50, h=50, x=w + 10, y=465)
+            new_enemie = Sprite(color=color, w=75, h=75, x=w + 10, y=545)
             obstacle_timer = pygame.time.get_ticks()
             obstacle_spawn = False
 
         if cheese:
             cheese.solo_update(screen, speed)
-            if cheese.rect.collidepoint(mouse.rect.x, mouse.rect.y):
+            if mouse.rect.collidepoint(cheese.rect.x, cheese.rect.y):
                 window.jumping_sound_fx.play()
                 cheese = None
                 cheese_count += 1
@@ -199,6 +231,7 @@ def infinite_level(window):
             mouse.health -= 1
             mouse_hurt = False
 
+        # Gestion du score.
         if round(player_score, 1) % 100 == 0 and int(player_score) > 0:
             window.scoring_sound_fx.play()
 
@@ -214,9 +247,10 @@ def infinite_level(window):
             screen.blit(full_life_scaled, (x, 10))
             x += 50
 
+        # Gestion en cas de mort.
         if not game_over:
             mouse.right_down = True
-            mouse.x = 10
+            mouse.x = 70
             mouse.display(screen)
         else:
             mouse.flip(screen)
