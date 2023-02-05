@@ -1,7 +1,14 @@
+# Importations des modules.
 from pygame import display, time, image, transform, mixer, FULLSCREEN
 
 
+# Définition de la Class Sprite.
 class Window(object):
+    """Class permettant de gérer la fenêtre du joueur.
+
+    """
+
+    # Définitions du constructeur.
     def __init__(self, width, height, flags):
         self.__clock = time.Clock
         if flags == FULLSCREEN:
@@ -41,7 +48,7 @@ class Window(object):
         self.boom_fx = mixer.Sound(self.boom)
         self.boom_fx.set_volume(0.5)
 
-        display.set_caption("Ted & Max")
+        display.set_caption("Le RAT")
         mixer.init()
         mixer.music.load(self.main_music)
         mixer.music.set_volume(0.02)
@@ -49,16 +56,32 @@ class Window(object):
 
     @staticmethod
     def update():
+        """Fonction qui rafraichit l'écran.
+
+        :return: None
+        """
         display.update()
 
     def get_screen(self):
+        """fonction qui retourne un objet display de pyagme.
+
+        :return: display
+        """
         return self.screen
 
     def get_screen_size(self):
+        """Fonction qui retourne la largeur et la hauteur de la fenêtre du joueur.
+
+        :return: List
+        """
         width, height = self.screen.get_size()
         return [width, height]
 
     def load_bg(self):
+        """Fonction qui charge en mémoire les images du background.
+
+        :return: List
+        """
         bg_images = list()
         w, h = self.get_screen_size()
         for i in range(1, 6):
@@ -69,6 +92,13 @@ class Window(object):
         return [bg_images, bg_width]
 
     def draw_bg(self, bg_images, bg_width, scroll):
+        """fonction qui affiche le background avec un mode parallax.
+
+        :param bg_images: List
+        :param bg_width: Int
+        :param scroll: Float
+        :return: None
+        """
         for x in range(5):
             speed = 1
             for i in bg_images:

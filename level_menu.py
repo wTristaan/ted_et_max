@@ -1,7 +1,9 @@
+# Importations des modules.
 import pygame
 
 from Levels.infinite_level import infinite_level
 
+# Initialisation de pygame.
 pygame.init()
 
 # Initialisation des variables.
@@ -10,6 +12,11 @@ scroll = 0
 
 
 def show_level_menu(window):
+    """Fonction qui affiche la fenêtre des niveaux lorsque le joueur à déjà fait le tuto.
+
+    :param window: Window
+    :return: None
+    """
     global running, scroll
     bg_images, bg_width = window.load_bg()
     screen = window.get_screen()

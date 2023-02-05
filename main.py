@@ -6,13 +6,12 @@ from settings import show_setting
 from level_menu import show_level_menu
 from Class.Window import Window
 
-
 # initialisation de pygame
 pygame.init()
 clock = pygame.time.Clock()
 
 # Création de la fenêtre
-window = Window(900, 600, pygame.RESIZABLE)
+window = Window(1280, 720, pygame.RESIZABLE)
 
 # Initialisation des variables.
 screen = window.get_screen()
@@ -40,19 +39,19 @@ while running:
     # Affichage du background et défilement.
     window.draw_bg(bg_images, bg_width, scroll)
 
-    # auto scroll
+    # Auto scroll
     scroll += 1
     if scroll > bg_width:
         scroll = 0
     clock.tick(FPS)
 
-    # affichage des trois boutons
+    # Affichage des trois boutons
     screen.blit(play_button, (window.get_screen_size()[0] / 2 - play_button.get_width() / 2,
-                                           window.get_screen_size()[1] / 2 - play_button.get_height() / 2 - 200))
+                              window.get_screen_size()[1] / 2 - play_button.get_height() / 2 - 200))
     screen.blit(play_button2, (window.get_screen_size()[0] / 2 - play_button2.get_width() / 2,
-                                            window.get_screen_size()[1] / 2 - play_button2.get_height() / 2 + 0))
+                               window.get_screen_size()[1] / 2 - play_button2.get_height() / 2 + 0))
     screen.blit(play_button3, (window.get_screen_size()[0] / 2 - play_button3.get_width() / 2,
-                                            window.get_screen_size()[1] / 2 - play_button3.get_height() / 2 + 200))
+                               window.get_screen_size()[1] / 2 - play_button3.get_height() / 2 + 200))
 
     # Gestion des évènements dans le menu principal.
     for event in pygame.event.get():
@@ -62,11 +61,11 @@ while running:
         if event.type == pygame.VIDEORESIZE:
             bg_images, bg_width = window.load_bg()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:  # aventure
+            if event.key == pygame.K_UP:  # Aventure
                 aventure = True
-            if event.key == pygame.K_RIGHT:  # option
+            if event.key == pygame.K_RIGHT:  # Option
                 option = True
-            if event.key == pygame.K_DOWN:  # fermeture
+            if event.key == pygame.K_DOWN:  # Fermeture
                 pygame.quit()
                 exit()
 
@@ -74,7 +73,7 @@ while running:
     if aventure:
         # Vérifie le cache pour savoir si le joueur à déjà fait le tuto.
         value = open("cache.txt").read()
-        if value == "0":
+        if not value:
             window.change_menu_fx.play()
             aventure = show_tuto(window)
             if aventure:
@@ -85,6 +84,7 @@ while running:
             aventure = False
             show_level_menu(window)
 
+    # Si le joueur lance les options.
     if option:
         window.change_menu_fx.play()
         option = show_setting(window)

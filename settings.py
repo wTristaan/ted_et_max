@@ -1,5 +1,7 @@
+# Importations des modules.
 import pygame
 
+# Initialisation de pygame.
 pygame.init()
 
 # Initialisation des variables
@@ -16,11 +18,17 @@ btn_color = (0, 255, 0)
 
 
 def show_setting(window):
+    """Function permettant l'affichage et le paramétrage des options du jeu.
+
+    :param window: Window
+    :return: None
+    """
     global scroll, control_font, music_button_radius, btn_color
     screen = window.screen
     running = True
     while running:
-        screen.fill((135, 206, 250))  # couleur bleu clair
+
+        screen.fill((135, 206, 250))  # Couleur bleu clair
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
